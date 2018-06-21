@@ -1,0 +1,85 @@
+{% extends "t-application.html" %}
+
+{% block content %}
+    <div class="tpl-content-page-title">
+        修改角色信息
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+
+        <li class="am-active">修改角色信息</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+
+            <div class="caption font-green bold">
+                <span class="am-icon-code"></span> 表单
+
+            </div>
+            <div class="tpl-portlet-input tpl-fz-ml">
+                <div class="portlet-input input-small input-inline">
+                    <div class="input-icon right">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class="error-message">
+                                    {% for message in messages %}
+                                        <li class="am-icon-bell-o">{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tpl-block ">
+
+            <div class="am-g tpl-amazeui-form">
+                <div class="am-u-sm-12 am-u-md-9">
+                    <form action="" class="am-form am-form-horizontal" method="post">
+                        <div class="am-form-group">
+                            <label for="user-phone" class="am-u-sm-3 am-form-label">角色名称</label>
+                            <div class="am-u-sm-9">
+                                <input name="rolename" type="text" placeholder="角色名称" value="{{ dataview.RoleName }}">
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+
+                            <div class="am-u-sm-push-3">
+                                <table width="80%" class="am-table am-table-striped am-table-hover table-main">
+                                    {% for item in pmenu %}
+                                        {% if item.ParentPos==10000 %}
+                                        <tr>
+                                            <td>
+                                                <span>{{ item.menu }}</span>
+                                            </td>
+                                            <td>
+
+                                                {% for mn in pmenu %}
+                                                    {% if mn.ParentPos==item.Position %}
+                                                    <label class="am-checkbox-inline">
+                                                        <input type="checkbox" name="cc" value="{{ mn.ID }}" {% if dataview.Menus %} {% if mn.ID|string in dataview.Menus.split(',') %} checked {% endif %}{% endif %}> {{ mn.menu }}
+                                                    </label>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <button type="submit" class="am-btn am-btn-primary">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

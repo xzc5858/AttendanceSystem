@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}人员管理{% endblock %}
+
+{% block content %}
+    <div class="tpl-content-page-title">
+        人员管理
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+
+        <li class="am-active">人员列表</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+            <div class="caption font-green bold">
+                <span class="am-icon-code"></span> 列表
+            </div>
+            <div class="tpl-portlet-input tpl-fz-ml">
+                <div class="portlet-input input-small input-inline">
+                    <div class="input-icon right">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class="error-message">
+                                    {% for message in messages %}
+                                        <li class="am-icon-bell-o">{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tpl-block">
+            <div class="am-g">
+                <div class="am-u-sm-12 am-u-md-3">
+                    <div class="am-btn-toolbar">
+                        <div class="am-btn-group am-btn-group-xs">
+                            <button onclick="javascript:window.location.href='/users-add'" type="button"
+                                    class="am-btn am-btn-default am-btn-success"><span
+                                    class="am-icon-plus"></span> 新增
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+                <form class="am-form" action="/users" method="get">
+                    <div class="am-u-sm-12 am-u-md-3">
+                        <div class="am-form-group">
+                            <select name="dept" class="form-control form-control-solid">
+                                <option value="all">所在单位</option>
+                                {% for item in Dept %}
+                                    <option value="{{ item.DepID }}">{{ item.DepName }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-3">
+                        <div class="am-form-group">
+                            <select name="role" class="form-control form-control-solid">
+                                <option value="all">选择权限</option>
+                                {% for item in roles %}
+                                    <option value="{{ item.ID }}" {{ request.args.get('role') }} {% if item.ID|string==request.args.get('role') %} selected = "selected" {% endif %}>{{ item.RoleName }}</option>
+                                {% endfor %}
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-3">
+                        <div class="am-input-group am-input-group-sm">
+                            <input type="text" name="custname" class="am-form-field" placeholder="考勤号、姓名、用户名都可以" >
+                            <span class="am-input-group-btn">
+            <button class="am-btn  am-btn-default am-btn-success tpl-am-btn-success am-icon-search"
+                    type="submit"></button>
+          </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="am-g">
+                <div class="am-u-sm-12">
+
+                    <table class="am-table am-table-striped am-table-hover table-main">
+                        <thead>
+                        <tr>
+                            <th class="table-check"><input type="checkbox" class="tpl-table-fz-check"></th>
+                            <th class="table-title">真实姓名</th>
+                            <th class="table-date">用户名</th>
+                            <th class="table-date">考勤号</th>
+                            <th class="table-author">单位部门</th>
+                            <th class="table-author">所属角色</th>
+                            <th class="table-set">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for wr in users.items %}
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>{{ wr.truename }}</td>
+                                <td>{{ wr.username }}</td>
+                                <td>{{ wr.EnrollNumber }}</td>
+                                <td>{{ wr.deps.DepName }}</td>
+                                <td>{{ wr.Roles.RoleName }}</td>
+
+                                <td>
+                                    <div class="am-btn-toolbar">
+                                        <div class="am-btn-group am-btn-group-xs">
+                                            <a class="am-btn am-btn-default am-btn-xs am-text-secondary"
+                                               href='/users-edit/{{ wr.userid }}'><span
+                                                    class="am-icon-pencil-square-o"></span> 编辑
+                                            </a>
+                                            <a class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"
+                                               href='/users-del/{{ wr.userid }}'
+                                               onclick="if(!confirm('确定要删除吗？')){return false}">
+                                                <span class="am-icon-trash-o"></span> 删除
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="am-cf">
+
+                        <div class="am-fr">
+                            <ul class="am-pagination tpl-pagination">
+                                {% if users.has_prev %}
+                                    <li><a href="{{ url_for('.getuser',page=users.prev_num,dept=request.args.get('dept'),role=request.args.get('role')) }}">«</a></li>
+                                {% endif %}
+                                {% set page_now = users.page %}
+                                {% set page_count = users.pages %}
+                                {% for p in users.iter_pages() %}
+                                    {% if page_now==p %}
+                                        <li class="am-active"><a href="{{ url_for('.getuser',page=p,dept=request.args.get('dept'),role=request.args.get('role')) }}">{{ p }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li><a href="{{ url_for('.getuser',page=p,dept=request.args.get('dept'),role=request.args.get('role')) }}">{{ p }}</a></li>
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                {% if users.has_next %}
+                                    <li><a href="{{ url_for('.getuser',page=users.next_num,dept=request.args.get('dept'),role=request.args.get('role')) }}">»</a></li>
+                                {% endif %}
+
+                            </ul>
+
+                        </div>
+                    </div>
+                    <hr>
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="tpl-alert"></div>
+    </div>
+    <script language="JavaScript">
+
+    </script>
+{% endblock %}

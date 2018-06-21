@@ -1,0 +1,94 @@
+{% extends "t-application.html" %}
+{% block title %}班次规则设置{% endblock %}
+{% block content %}
+    <div class="tpl-content-page-title">
+        班次规则设置
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+
+        <li class="am-active">班次规则设置</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+            <div class="caption font-green bold">
+                <span class="am-icon-code"></span> 列表
+            </div>
+
+            <div class="tpl-portlet-input tpl-fz-ml">
+                <div class="portlet-input input-small input-inline">
+                    <div class="input-icon right">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class="error-message">
+                                    {% for message in messages %}
+                                        <li class="am-icon-bell-o">{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tpl-block">
+            <div class="am-g">
+                <div class="am-u-sm-12 am-u-md-6">
+                    <div class="am-btn-toolbar">
+                        <div class="am-btn-group am-btn-group-xs">
+                            <button onclick="javascript:window.location.href='/shift-add'" type="button"
+                                    class="am-btn am-btn-default am-btn-success"><span
+                                    class="am-icon-plus"></span> 新增
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="am-g">
+                <div class="am-u-sm-12">
+                    <table class="am-table am-table-striped am-table-hover table-main">
+                        <thead>
+                        <tr>
+                            <th class="table-check"><input type="checkbox" class="tpl-table-fz-check"></th>
+                            <th class="table-title">班次名称</th>
+                            <th class="table-title">上班时间段</th>
+                            <th class="table-set">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for wr in dataview %}
+                            <tr>
+                                <td><input type="checkbox"></td>
+                                <td>{{ wr.shiftname }}</td>
+                                <td>{% for item in schclass %}
+                                        <label class="am-radio-inline"><input type="checkbox" name="cc"
+                                           {% if item.schClassid|string in wr.SchClassList.split(',') %} checked {% endif %} disabled/>{{ item.schName }}
+                                        </label>
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <div class="am-btn-toolbar">
+                                        <div class="am-btn-group am-btn-group-xs">
+                                            <a class="am-btn am-btn-default am-btn-xs am-text-secondary"
+                                               href='/shift-edit/{{ wr.ID }}'><span
+                                                    class="am-icon-pencil-square-o"></span> 编辑
+                                            </a>
+                                            <a class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"
+                                               href='/shift-del/{{ wr.ID }}'
+                                               onclick="if(!confirm('确定要删除吗？')){return false}">
+                                                <span class="am-icon-trash-o"></span> 删除
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="tpl-alert"></div>
+    </div>
+{% endblock %}

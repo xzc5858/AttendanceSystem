@@ -1,0 +1,8 @@
+{% for items in list %}
+
+    {% for item in items[0] %}
+        {{ item }}<br/>
+    {% endfor %}
+{{ items[1] }}
+<br/>
+{% endfor %}

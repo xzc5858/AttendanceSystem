@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}
+        <meta charset="UTF-8">
+        <title>政务大厅考勤系统－{% block title %}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="Cache-Control" content="no-siteapp"/>
+        <link rel="icon" type="image/png" href="../static/assets/i/favicon.png">
+        <link rel="apple-touch-icon-precomposed" href="../static/assets/i/app-icon72x72@2x.png">
+        <meta name="apple-mobile-web-app-title" content="政务大厅考勤系统"/>
+        <link rel="stylesheet" href="../static/assets/css/amazeui.min.css">
+        <link rel="stylesheet" href="../static/assets/css/amazeui.datetimepicker.css"/>
+        <link rel="stylesheet" href="../static/assets/css/admin.css">
+        <link rel="stylesheet" href="../static/assets/css/app.css">
+        <script src="../static/assets/js/jquery.min.js"></script>
+        <script src="../static/assets/js/amazeui.min.js"></script>
+        <script src="../static/assets/js/iscroll.js"></script>
+        <link type="text/css" rel="stylesheet" href="../static/assets/js/admin.css"/>
+        <link rel="stylesheet" type="text/css" href="../static/assets/js/jquery-ui.css"/>
+        <script type="text/javascript" src="../static/assets/js/jquery-ui-1.10.4.custom.min.js"></script>
+        <script type="text/javascript" src="../static/assets/js/jquery.ui.datepicker-zh-CN.js"></script>
+        <script type="text/javascript" src="../static/assets/js/jquery-ui-timepicker-addon.js"></script>
+        <script type="text/javascript" src="../static/assets/js/jquery-ui-timepicker-zh-CN.js"></script>
+    {% endblock %}
+</head>
+<body data-type="generalComponents">
+<header class="am-topbar am-topbar-inverse admin-header">
+    <div class="am-topbar-brand">
+        <a href="javascript:;" class="tpl-logo">
+            <img src="../static/assets/img/logo.png" alt="">
+        </a>
+    </div>
+    <div class="am-icon-list tpl-header-nav-hover-ico am-fl am-margin-right">
+    </div>
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only"
+            data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span
+            class="am-icon-bars"></span></button>
+    <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+        <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
+
+            <li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
+                <a class="am-dropdown-toggle tpl-header-list-link" href="javascript:;">
+                    <span class="am-icon-comment-o"></span> 消息 <span
+                        class="am-badge tpl-badge-danger am-round">{% if sbcount()>0 %}{{ sbcount() }}{% endif %}</span></span>
+                </a>
+                <ul class="am-dropdown-content tpl-dropdown-content">
+                    <li class="tpl-dropdown-content-external">
+                        <h3>昨天有 <span class="tpl-color-danger">{{ sbcount() }}</span> 台机子上传数据失败</h3><a href="/machinesstate">全部</a></li>
+                    <li>
+                    </li>
+                </ul>
+            </li>
+            <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen" class="tpl-header-list-link"><span
+                    class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
+            <li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
+                <a class="am-dropdown-toggle tpl-header-list-link" href="javascript:;"><span
+                        class="am-icon-user"></span>
+                    当前用户：<span class="tpl-header-list-user-nick">{{ current_user.truename }}</span>
+                </a>
+            </li>
+            <li><a href="/logout" class="tpl-header-list-link"><span
+                    class="am-icon-sign-out tpl-header-list-ico-out-size"></span>退出</a></li>
+        </ul>
+    </div>
+</header>
+<div class="tpl-page-container tpl-page-header-fixed">
+    <div class="tpl-left-nav tpl-left-nav-hover">
+        <div class="tpl-left-nav-title">
+            考勤管理
+        </div>
+        <div class="tpl-left-nav-list">
+            <ul class="tpl-left-nav-menu">
+                {% block menu %}
+                    {% include "left-nav.html" %}
+                {% endblock %}
+            </ul>
+        </div>
+    </div>
+    <div class="tpl-content-wrapper">
+        {% block content %}{% endblock %}
+    </div>
+</div>
+<script src="../static/assets/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+
+	<link rel="stylesheet" type="text/css" href="css/normalize.css" />
+	<script async>
+	function fp_ready(){
+	// setting custom defaults
+	Flatpickr.l10n.firstDayOfWeek = 1;
+
+	//Regular flatpickr
+	document.getElementById("flatpickr1").flatpickr();
+	document.getElementById("flatpickr2").flatpickr();
+
+
+
+
+
+	}
+	</script>
+	<script async src="dist/flatpickr.js" onload="fp_ready()"></script>
+	<script async src="assets/prettify.js?skin=none" onload="prettyPrint()"></script>
+	<script async src="assets/table-of-contents.js"></script>
+	<script async src="assets/themer.js"></script>
+	<script async id="locale_script"></script>
+	<script async src="assets/localizr.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="assets/site.css">
+	<link rel="stylesheet" id=cal_style type="text/css" href="dist/flatpickr.min.css">
+	<!--[if IE]>
+		<script src="http://libs.useso.com/js/html5shiv/3.7/html5shiv.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	 
+
+	<div class='wrapper'>
+
+
+		<div class="example" data-desc="Datetimepicker" id="datetimepicker">
+
+		<p>
+			<input id="flatpickr1" class=flatpickr data-enable-time=true placeholder="Pick date and time">
+		</p>
+		<br>
+
+
+		<p>
+			<input id=flatpickr2 data-enable-time=true data-time_24hr=true placeholder="24 hour time">
+		</p>
+
+		</div>
+
+
+	</div>
+
+
+	<script src="../static/assets/js/jquery.min.js"></script>
+
+</body>
+</html>

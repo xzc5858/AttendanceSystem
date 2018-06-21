@@ -1,0 +1,169 @@
+{% extends "t-application.html" %}
+{% block title %}请假特批{% endblock %}
+{% block content %}
+      <style type="text/css">
+
+        .ui-timepicker-div .ui-widget-header {
+            margin-bottom: 8px;
+        }
+
+        .ui-timepicker-div dl {
+            text-align: left;
+        }
+
+        .ui-timepicker-div dl dt {
+            float: left;
+            clear: left;
+            padding: 0 0 0 5px;
+        }
+
+        .ui-timepicker-div dl dd {
+            margin: 0 10px 10px 45%;
+        }
+
+        .ui-timepicker-div td {
+            font-size: 90%;
+        }
+
+        .ui-tpicker-grid-label {
+            background: none;
+            border: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ui-timepicker-rtl {
+            direction: rtl;
+        }
+
+        .ui-timepicker-rtl dl {
+            text-align: right;
+            padding: 0 5px 0 0;
+        }
+
+        .ui-timepicker-rtl dl dt {
+            float: right;
+            clear: right;
+        }
+
+        .ui-timepicker-rtl dl dd {
+            margin: 0 45% 10px 10px;
+        }
+
+    </style>
+    <div class="tpl-content-page-title">
+        请假特批
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+        <li class="am-active">请假特批</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+
+            <div class="caption font-green bold">
+                <span class="am-icon-code"></span> 表单
+            </div>
+            <div class="tpl-portlet-input tpl-fz-ml">
+                <div class="portlet-input input-small input-inline">
+                    <div class="input-icon right">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class="error-message">
+                                    {% for message in messages %}
+                                        <li class="am-icon-bell-o">{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tpl-block ">
+
+            <div class="am-g tpl-amazeui-form">
+                <div class="am-u-sm-12 am-u-md-9">
+                    <form action="" class="am-form am-form-horizontal" method="post">
+
+                       <div class="am-form-group">
+                            <label for="user-QQ" class="am-u-sm-3 am-form-label">选择单位</label>
+                            <div class="am-u-sm-9">
+                                <select name="depts" id="depts">
+                                    {% for item in Dept %}
+                                        <option value="{{ item.DepID }} ">{{ item.DepName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-name" class="am-u-sm-3 am-form-label">请假人姓名</label>
+                            <div class="am-u-sm-9">
+                                <select name="user" id="user">
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <label for="user-email" class="am-u-sm-3 am-form-label">起始时间</label>
+                            <div class="am-u-sm-9">
+                                <input name="StartTime" size="16" type="text" class="text-box" value="{{ firsttime }}"
+                                       placeholder="起始时间≥当前时间"
+                                       title="开始时间≥当前时间" readonly="readonly" style="cursor:pointer;"/>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-phone" class="am-u-sm-3 am-form-label">结束时间</label>
+                            <div class="am-u-sm-9">
+                                <input name="EndTime" size="16" type="text" value="{{ endtime }}" readonly
+                                       class="text-box">
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <label for="user-QQ" class="am-u-sm-3 am-form-label">请假类别</label>
+                            <div class="am-u-sm-9">
+                                <select name="Category">
+                                    {% for cat in cats %}
+                                        <option value="{{ cat.id }} ">{{ cat.catname }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <button type="submit" class="am-btn am-btn-primary">提交请假申请</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script language="javascript">
+        $("#depts").change(function () {
+            var selectdept = $("#depts").val();
+            $.ajax({
+                method: "POST",
+                data: {key: selectdept},
+                url: '/getusers',
+                success: function (data) {
+                    var userlist = data;
+                    var userSelectStr = ""
+                    if (userlist != null) {
+                        for (var i = 0, len = userlist.length; i < len; i++) {
+
+                            userSelectStr = userSelectStr + "<option value='" + userlist[i][0] + "'>" + userlist[i][1] + "</option>"
+                        }
+                    }
+                    $("#user").html(userSelectStr);
+
+                }
+            })
+        });
+
+    </script>
+      <script type="text/javascript">$("input[name='StartTime'],input[name='EndTime']").datetimepicker();</script>
+{% endblock %}

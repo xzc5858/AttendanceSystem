@@ -1,0 +1,15 @@
+{% import 'macro-jifen.html' as macjifen %}
+{%  macjifen.list_jifen(lists) %}
+{% macro danwei(lists) %}
+
+    {#    <% endfor %>#}
+    {#    {% for item in lists %}#}
+    {#        <tr>#}
+    {#            <td>{{ item.DepName }}</td>#}
+    {#            <td>{{ item.truename }}</td>#}
+    {#            <td>{{ item.EnrollNumber }}</td>#}
+    {#            {{ list_jifen(sumlist) }}#}
+    {#        </tr>#}
+    {#    {%- endfor %}#}
+
+{% endmacro %}

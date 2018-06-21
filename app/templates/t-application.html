@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}请假申请{% endblock %}
+
+{% block content %}
+    <div class="tpl-content-page-title">
+        请假申请
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+
+        <li class="am-active">请假列表</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+            <div class="caption font-green bold">
+                <span class="am-icon-code"></span> 列表
+            </div>
+
+            <div class="tpl-portlet-input tpl-fz-ml">
+                <div class="portlet-input input-small input-inline">
+                    <div class="input-icon right">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class="error-message">
+                                    {% for message in messages %}
+                                        <li class="am-icon-bell-o">{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="tpl-block">
+            <div class="am-g">
+                <div class="am-u-sm-12 am-u-md-6">
+                    <div class="am-btn-toolbar">
+                        <div class="am-btn-group am-btn-group-xs">
+                            <button onclick="javascript:window.location.href='/application-add'" type="button"
+                                    class="am-btn am-btn-default am-btn-success"><span
+                                    class="am-icon-plus"></span> 新增
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+<!---
+                <div class="am-u-sm-12 am-u-md-3">
+                    <div class="am-form-group">
+                        <select data-am-selected="{btnSize: 'sm'}">
+
+                            <option value="option1">所有类别</option>
+                            {% for cat in cats %}
+                                <option value="option3">{{ cat.catname }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="am-u-sm-12 am-u-md-3">
+                    <div class="am-input-group am-input-group-sm">
+                        <input type="text" class="am-form-field">
+                        <span class="am-input-group-btn">
+            <button class="am-btn  am-btn-default am-btn-success tpl-am-btn-success am-icon-search"
+                    type="button"></button>
+          </span>
+                    </div>
+                </div>
+                ---->
+            </div>
+            <div class="am-g">
+                <div class="am-u-sm-12">
+
+                    <table class="am-table  am-table-hover table-main">
+                        <thead>
+                        <tr>
+                            <th class="table-check"><input type="checkbox" class="tpl-table-fz-check"></th>
+                            <th class="table-title">请假人姓名</th>
+                            <th class="table-date">起始时间</th>
+                            <th class="table-date">结束时间</th>
+                            <th class="table-author">替班人员</th>
+                            <th class="table-title">其他人</th>
+                            <th class="table-title">请假类别</th>
+                            <th class="table-title">请假状态</th>
+                            <th class="table-title">请假结果</th>
+                            <th class="table-set">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for wr in leaves.items %}
+                            <tr  {% if wr.Agree==1 %} class="endrow" {% elif wr.Agree==0 %} class="passrow" {% else %} class="zcrow" {% endif %}>
+                                <td><input type="checkbox"></td>
+                                <td>{{ wr.LeaveUsers.truename }}</td>
+                                <td>{{ wr.StartTime }}</td>
+                                <td>{{ wr.EndTime }}</td>
+                                <td>{{ wr.SubUserID|getuser }}</td>
+                                <td>{{ wr.otherUser }}</td>
+                                <td>{{ wr.Categorys.catname }}</td>
+                                <td>{{ wr.Send |zt }}</td>
+                                <td>{{ wr.Agree|jg }}</td>
+                                <td>
+                                    <div class="am-btn-toolbar">
+                                        <div class="am-btn-group am-btn-group-xs">
+                                            <a class="am-btn am-btn-default am-btn-xs am-text-secondary"
+                                               href='/application-edit/{{ wr.LeaveID }}'><span
+                                                    class="am-icon-pencil-square-o"></span> 编辑
+                                            </a>
+                                            <a class="am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only"
+                                               href='/application-del/{{ wr.LeaveID }}'
+                                               onclick="if(!confirm('确定要删除吗？')){return false}">
+                                                <span class="am-icon-trash-o"></span> 删除
+                                            </a>
+                                            <a onclick="if(!confirm('确定要发送吗？')){return false}"
+                                               href="/application-send/{{ wr.LeaveID }}"
+                                               class="am-btn am-btn-default am-btn-xs am-hide-sm-only"><span
+                                                    class="am-icon-copy"></span> 发送
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="am-cf">
+
+                        <div class="am-fr">
+                            <ul class="am-pagination tpl-pagination">
+                                {% if leaves.has_prev %}
+                                    <li><a href="{{ url_for('.Application',page=leaves.prev_num) }}">«</a></li>
+                                {% endif %}
+                                {% set page_now = leaves.page %}
+                                {% set page_count = leaves.pages %}
+                                {% for p in leaves.iter_pages() %}
+                                    {% if page_now==p %}
+                                    <li class="am-active"><a href="{{ url_for('.Application',page=p) }}">{{ p }}</a></li>
+                                    {% else %}
+                                    <li><a href="{{ url_for('.Application',page=p) }}">{{ p }}</a></li>
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                {% if leaves.has_next %}
+                                    <li><a href="{{ url_for('.Application',page=leaves.next_num) }}">»</a></li>
+                                {% endif %}
+
+                            </ul>
+
+                        </div>
+                    </div>
+                    <hr>
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="tpl-alert"></div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "t-application.html" %}
+{% block title %}添加主机{% endblock %}
+{% block content %}
+    <div class="tpl-content-page-title">
+        添加主机
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+
+        <li class="am-active">添加主机</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+
+            <div class="caption font-green bold">
+                <span class="am-icon-code"></span> 表单
+            </div>
+            <div class="tpl-portlet-input tpl-fz-ml">
+                <div class="portlet-input input-small input-inline">
+                    <div class="input-icon right">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class="error-message">
+                                    {% for message in messages %}
+                                        <li class="am-icon-bell-o">{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tpl-block ">
+
+            <div class="am-g tpl-amazeui-form">
+                <div class="am-u-sm-12 am-u-md-9">
+                    <form action="" class="am-form am-form-horizontal" method="POST">
+                        <div class="am-form-group">
+                            <label for="user-phone" class="am-u-sm-3 am-form-label">指纹机名称</label>
+                            <div class="am-u-sm-9">
+                                <input name="MachineAlias" type="text" placeholder="指纹机名称">
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <hr/>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-phone" class="am-u-sm-3 am-form-label">机器号</label>
+                            <div class="am-u-sm-9">
+                                <input name="MachineNumber" type="text" placeholder="机器号">
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-phone" class="am-u-sm-3 am-form-label">IP地址</label>
+                            <div class="am-u-sm-9">
+                                <input name="IP" type="text" placeholder="IP地址">
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-phone" class="am-u-sm-3 am-form-label">端口号</label>
+                            <div class="am-u-sm-9">
+                                <input name="Port" type="number" placeholder="端口号">
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-QQ" class="am-u-sm-3 am-form-label">波特率</label>
+                            <div class="am-u-sm-9">
+                                <input name="Baudrate" type="number" placeholder="波特率">
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <label for="user-weibo" class="am-u-sm-3 am-form-label">进门机(出门机)</label>
+                            <div class="am-u-sm-9">
+                                <select name="EnterOrOut">
+
+                                    <option value="1">进门机</option>
+                                    <option value="0">出门机</option>
+
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <button type="submit" class="am-btn am-btn-primary">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

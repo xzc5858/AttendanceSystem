@@ -1,0 +1,20 @@
+{% macro list_jifen(lists) %}
+    {% for item in lists %}
+        <tr>
+            <td>{{ item.DepName }}</td>
+            <td>{{ item.truename }}</td>
+            <td>{{ item.EnrollNumber }}</td>
+            <td>{{ item.应到 }}</td>
+            <td>{{ item.实到 }}</td>
+            <td>{{ item.迟到早退 }}</td>
+            <td>{{ item.脱岗 }}</td>
+            <td>{{ item.未按指纹 }}</td>
+            <td>{{ item.公差 }}</td>
+            <td>{{ item.事假 }}</td>
+            <td>{{ item.病假 }}</td>
+            <td>{{ item.休假 }}</td>
+            <td>{% set vl=item|jifen %}{{ vl }}</td>
+            <td>{{ item|jintie(vl) }}</td>
+        </tr>
+    {%- endfor %}
+{% endmacro %}

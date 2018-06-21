@@ -1,0 +1,81 @@
+{% extends "t-application.html" %}
+{% block title %}新增节日信息{% endblock %}
+{% block content %}
+    <div class="tpl-content-page-title">
+        新增节日信息
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+
+        <li class="am-active">新增节日信息</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+
+            <div class="caption font-green bold">
+                <span class="am-icon-code"></span> 表单
+
+            </div>
+            <div class="tpl-portlet-input tpl-fz-ml">
+                <div class="portlet-input input-small input-inline">
+                    <div class="input-icon right">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class="error-message">
+                                    {% for message in messages %}
+                                        <li class="am-icon-bell-o">{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tpl-block ">
+
+            <div class="am-g tpl-amazeui-form">
+                <div class="am-u-sm-12 am-u-md-9">
+                    <form action="" class="am-form am-form-horizontal" method="post">
+                        <div class="am-form-group">
+                            <label for="user-phone" class="am-u-sm-3 am-form-label">节日名称</label>
+                            <div class="am-u-sm-9">
+                                <input name="HOLIDAYNAME" type="text" placeholder="节日名称" required/>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-phone" class="am-u-sm-3 am-form-label">起始日期</label>
+                            <div class="am-u-sm-9">
+                                <input name="startdate" type="date" class="am-form-field am-input-sm" placeholder="起始日期" required/>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-phone" class="am-u-sm-3 am-form-label">天数</label>
+                            <div class="am-u-sm-9">
+                                <input name="DURATION" type="number" min="1" placeholder="天数" required/>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-phone" class="am-u-sm-3 am-form-label">类型</label>
+                            <div class="am-u-sm-9">
+                                <select name="CatID">
+                                        <option value="0"  selected="selected">休息</option>
+                                    <option value="1">上班</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <button type="submit" class="am-btn am-btn-primary">提交</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

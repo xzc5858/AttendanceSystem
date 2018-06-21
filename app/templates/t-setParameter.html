@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}上传设置{% endblock %}
+
+{% block content %}
+    <div class="tpl-content-page-title">
+        上传设置
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+
+        <li class="am-active">上传设置</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+            <div class="caption font-green bold">
+                <span class="am-icon-code"></span> 列表
+            </div>
+
+            <div class="tpl-portlet-input tpl-fz-ml">
+                <div class="portlet-input input-small input-inline">
+                    <div class="input-icon right">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class="error-message">
+                                    {% for message in messages %}
+                                        <li class="am-icon-bell-o">{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="tpl-block">
+            <div class="am-g tpl-amazeui-form">
+                <div class="am-u-sm-12 am-u-md-9">
+                    <form action="" class="am-form am-form-horizontal" method="post">
+                        <div class="am-form-group">
+                            <label for="user-name" class="am-u-sm-3 am-form-label">上传周期</label>
+                            <div class="am-u-sm-9">
+                                <select name="fre">
+                                    <option value="1" {% if dataview.updatefrequency=="1" %} selected="selected" {% endif %}>按月上传</option>
+                                    <option value="2" {% if dataview.updatefrequency=="2" %} selected="selected" {% endif %}>按周上传</option>
+                                    <option value="3" {% if dataview.updatefrequency=="3" %} selected="selected" {% endif %}>按天上传</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-email" class="am-u-sm-3 am-form-label">上传时间</label>
+                            <div class="am-u-sm-9">
+                                 <input name="riqi" type="time" class="am-form-field am-input-sm"  value="{{dataview.updateDate.strftime("%H:%M")}}" >
+                            </div>
+                        </div>
+
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                 <button type="submit" class="am-btn am-btn-primary">保存修改</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script language="JavaScript">
+
+    </script>
+{% endblock %}

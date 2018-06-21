@@ -1,0 +1,36 @@
+{% for item in get_parentmenu() %}
+    <li class="tpl-left-nav-item">
+        <a href="javascript:;" class="nav-link tpl-left-nav-link-list {% if  item.Position==(request.full_path|getParentPos) %} active {% endif %}">
+            <i class="{{ item.style }}"></i>
+            <span>{{ item.menu }}</span>
+            <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right tpl-left-nav-more-ico-rotate"></i>
+        </a>
+        <ul class="tpl-left-nav-sub-menu"   {% if  item.Position==(request.full_path|getParentPos) %} style="display: block;"  {% endif %}>
+            <li>
+                {% for mn in get_varmenu(item.Position) %}
+                    <a href="{{ mn.url }}" {% if  mn.ID==(request.full_path|getmenuid) %} class="active"  {% endif %}>
+                        <i class="am-icon-angle-right"></i>
+                        <span>{{ mn.menu }}</span>
+                    </a>
+                {% endfor %}
+            </li>
+        </ul>
+
+    </li>
+
+{% endfor %}
+
+
+<li class="tpl-left-nav-item">
+    <a href="/changepassword" class="nav-link tpl-left-nav-link-list">
+        <i class="am-icon-krw"></i>
+        <span>修改密码</span>
+    </a>
+</li>
+<li class="tpl-left-nav-item">
+    <a href="/logout" class="nav-link tpl-left-nav-link-list">
+        <i class="am-icon-key"></i>
+        <span>退  出</span>
+    </a>
+</li>
+

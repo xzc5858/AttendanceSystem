@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}指纹记录查询{% endblock %}
+
+{% block content %}
+    <div class="tpl-content-page-title">
+        指纹记录查询
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+
+        <li class="am-active">指纹记录查询</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+            <div class="caption font-green bold">
+                <span class="am-icon-code"></span> 列表
+            </div>
+
+            <div class="tpl-portlet-input tpl-fz-ml">
+                <div class="portlet-input input-small input-inline">
+                    <div class="input-icon right">
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul class="error-message">
+                                    {% for message in messages %}
+                                        <li class="am-icon-bell-o">{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="tpl-block">
+            <div class="am-g">
+                <form class="am-form" action="" method="get">
+                    <div class="am-u-sm-12 am-u-md-3">
+                        <div class="am-form-group">
+                            <select name="dept" class="form-control form-control-solid">
+                                <option value="all">所在单位</option>
+                                {% for item in Dept %}
+                                    {% if request.args.get('dept')==item.DepID|string %}
+                                        <option value="{{ item.DepID }}" selected="selected">{{ item.DepName }}</option>
+                                    {% else %}
+                                        <option value="{{ item.DepID }}">{{ item.DepName }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-3">
+                        <div class="am-form-group">
+                            <input name="startime" type="text" class="am-form-field" placeholder="起始日期"
+                                    {% if request.args.get('startime')!=None %}
+                                   value="{{ request.args.get('startime') }}" {% else %}
+                                   value="{{ sttime }}" {% endif %} data-am-datepicker readonly
+                                   required/>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-3">
+                        <div class="am-form-group">
+                            <input name="endtime" type="text" class="am-form-field" placeholder="截止日期"
+                                    {% if request.args.get('endtime')!=None %}
+                                   value="{{ request.args.get('endtime') }}" {% else %}
+                                   value="{{ edtime }}" {% endif %} data-am-datepicker readonly
+                                   required/>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12 am-u-md-3">
+                        <div class="am-input-group am-input-group-sm">
+                            <input type="text" name="custname" class="am-form-field" placeholder="考勤号、姓名、用户名都可以"
+                                    {% if request.args.get('custname')!=None %}
+                                   value="{{ request.args.get('custname') }}" {% endif %}>
+                            <span class="am-input-group-btn">
+            <button class="am-btn  am-btn-default am-btn-success tpl-am-btn-success am-icon-search"
+                    type="submit"></button>
+          </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="am-g">
+                <div class="am-u-sm-12">
+
+                    <table class="am-table am-table-striped am-table-hover table-main">
+                        <thead>
+                        <tr>
+                            <th class="table-title">单位名称</th>
+                            <th class="table-title">考勤号</th>
+                            <th class="table-title">姓名</th>
+                            <th class="table-title">按指纹时间</th>
+                            <th class="table-title">机器号</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for wr in dataview.items %}
+                            <tr>
+                                <td>{{ wr.DepName }}</td>
+                                <td>{{ wr.EnrollNumber }}</td>
+                                <td>{{ wr.truename }}</td>
+                                <td>{{ wr.date }}</td>
+                                <td>{{ wr.MachineID }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                    <div class="am-cf">
+
+                        <div class="am-fr">
+                            <ul class="am-pagination tpl-pagination">
+                                {% if dataview.has_prev %}
+                                    <li>   <a href="{{ url_for('.att',page=dataview.prev_num,dept=request.args.get('dept'),startime = request.args.get('startime'),endtime =request.args.get('endtime'),custname = request.args.get('custname')) }}">«</a>
+                                    </li>
+                                {% endif %}
+                                {% set page_now = dataview.page %}
+                                {% set page_count = dataview.pages %}
+                                {% for p in dataview.iter_pages() %}
+                                    {% if page_now==p %}
+                                        <li class="am-active"><a href="{{ url_for('.att',page=p,dept=request.args.get('dept'),startime= request.args.get('startime'),endtime =request.args.get('endtime'),custname = request.args.get('custname')) }}">{{ p }}</a></li>
+                                    {% else %}
+                                        <li><a href="{{ url_for('.att',page=p,dept=request.args.get('dept'),startime= request.args.get('startime'),endtime =request.args.get('endtime'),custname = request.args.get('custname')) }}">{{ p }}</a>
+                                        </li>
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                {% if dataview.has_next %}
+                                    <li><a href="{{ url_for('.att',page=dataview.next_num,dept=request.args.get('dept'),startime = request.args.get('startime'),endtime=request.args.get('endtime'),custname = request.args.get('custname')) }}">»</a></li>
+                                {% endif %}
+
+                            </ul>
+
+                        </div>
+                    </div>
+                    <hr>
+
+
+                </div>
+
+            </div>
+        </div>
+        <div class="tpl-alert"></div>
+    </div>
+
+{% endblock %}
