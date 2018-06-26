@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for, \
     request, flash, g, jsonify, abort, json
 from app.database import db, User, writtenForleave, association, Cat, WrittenforLeaveSign, Audited, Role, Menu, Sumlist, \
-    machinesstate, chidao, atttransaction, qingjia, tequan
+    machinesstate, chidao, atttransaction, qingjia, tequan,log
 from flask_login import login_required, login_user, logout_user, current_user
 from app import app
 from datetime import datetime, timedelta
@@ -234,7 +234,7 @@ def Instructions(page=1):
 
 
 # 批示审批
-@mod.route('/instruct-opinion/<id>', methods=["GET", "POST"])
+@mod.route('/Instructions-opinion/<id>', methods=["GET", "POST"])
 @login_required
 def instruct_opinion(id):
     # return redirect(url_for('.Instructions'))
@@ -267,6 +267,7 @@ def pishi(id, agree, bz, gc):
         # print('send:' + str(send))
         dataview.Send = str(send)
         dataview.ifTolerance = gc
+        # 完成了批示。
         if (str(send) == '1'):
             # print('ee')
             dataview.ifComplete = 1
@@ -776,6 +777,12 @@ def ajaxgetusers():
         dataview = db.session.query(User.userid, User.truename).filter(User.DepID == id).all()
         dt = jsonify(dataview)
         return dt
+
+
+def insert_log(data,event):
+    userid=current_user.userid
+    rq=datetime.now()
+    log(userid,data,rq,event)
 
 
 # 设置全局变量------------------------------------------------------

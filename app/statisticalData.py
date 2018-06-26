@@ -7,10 +7,10 @@ import calendar, datetime
 
 def start_tongji(st, ed):
     # s_yingdao(st, ed)
-    s_chidaozaotui(st, ed)
+    # s_chidaozaotui(st, ed)
     s_qingjia(st, ed)
-    s_tequan(st, ed)
-    s_sumlist(st, ed)
+    # s_tequan(st, ed)
+    # s_sumlist(st, ed)
 
 
 # 第一步，统计应到
@@ -171,39 +171,6 @@ def s_chidaozaotui(st, ed):
                         db.session.add(shidao(userid, 0, item.riqi, scclass_item.schName, shangbantm, xiabantm))
                         db.session.commit()
     print("迟到早退生成完成！")
-    # 先记为实到，然后没有记为旷工，然后看有没有假条
-    # if ifkuanggong == 2:
-    #     print(wuzw)
-    #     hj = 0
-    #     for i in range(0, len(wuzw)):
-    #         hj = hj + int(wuzw[i])
-    #     print(hj)
-    #     if hj >= 3:
-    #         # dataview=yingdao.query.filter(db.and_(yingdao.userid==userid,yingdao.riqi==sbdt,yingdao.zhuangtai==9)).all()
-    #         # dataview.zhuangtai=13
-    #         print('h')
-    #         # sql = "update t_shidao set zhuangtai=13 where userid=" + str(
-    #         #     userid) + " and riqi='" + sbdt + "' and zhuangtai=9"
-    #         # db.session.execute(sql)
-    #         db.session.add(kuanggong(userid, 13, sbdt, '2'))
-    #         db.session.commit()
-    #
-    #     elif hj < 3 and hj > 0:
-    #         print('l')
-    #         # sql = "update t_yingdao set zhuangtai=13 where userid=" + userid + " and riqi='" + sbdt + "' and zhuangtai=9  and schName='上午班' or userid=" + userid + " and riqi='" + sbdt + "' and zhuangtai=9  and schName='下午班'"
-    #         # db.session.execute(sql)
-    #         # dataview = shidao.query.filter(
-    #         #     db.and_(shidao.userid == userid, shidao.riqi == sbdt, shidao.zhuangtai == 9)).first()
-    #         # if dataview != None:
-    #         #     dataview.zhuangtai = 13
-    #         #     db.session.add(dataview)
-    #         db.session.add(kuanggong(userid, 13, sbdt, '1'))
-    #         db.session.commit()
-    # sql = "update t_shidao set zhuangtai=" + str(leaves[i].Category) + " where userid=" + str(
-    #     item.userid) + " and sttime >= '" + str(leaves[i].StartTime) + "' and edtime<= '" + str(
-    #     leaves[i].EndTime) + "'"
-    # db.session.execute(sql)
-    # db.session.commit()
 
 
 def s_qingjia(st, ed):
@@ -211,15 +178,22 @@ def s_qingjia(st, ed):
     edt = datetime.datetime.strptime(ed, '%Y-%m-%d')
 
     users = User.query.filter(User.DepID != None).all()
-    # 循环每个用户
+    # 循环每个用户，但是，有些跨月的，提取不到，比如产假，一请就是半年以上的，这种提取不到。所以这种应该生成一个表，记录每一天的请假情况。
     for item in users:
-        leaves = writtenForleave.query.filter(db.and_(writtenForleave.StartTime >= st, writtenForleave.EndTime <= ed,
-                                                      writtenForleave.LeaveUserId == item.userid,
-                                                      writtenForleave.ifComplete == 1,
-                                                      writtenForleave.Agree == 1)).all()
+        leaves = writtenForleave.query.filter(
+            db.or_(db.and_(writtenForleave.StartTime >= st, writtenForleave.EndTime <= ed,
+                           writtenForleave.LeaveUserId == item.userid,
+                           writtenForleave.ifComplete == 1, writtenForleave.Agree == 1),
+                   db.and_(db.between(st, writtenForleave.StartTime,
+                                      writtenForleave.EndTime), writtenForleave.LeaveUserId == item.userid,
+                           writtenForleave.ifComplete == 1, writtenForleave.Agree == 1
+                           ), db.and_(db.between(ed, writtenForleave.StartTime, writtenForleave.EndTime),
+                                      writtenForleave.LeaveUserId == item.userid,
+                                      writtenForleave.ifComplete == 1, writtenForleave.Agree == 1))).all()
+
         for i in range(0, len(leaves)):
-            # jiange = (leaves[i].EndTime - leaves[i].StartTime).days
-            # print(type(leaves[i].StartTime))
+            jiange = (leaves[i].EndTime - leaves[i].StartTime).days
+            # print(leaves[i].LeaveID)
             sql = "update t_kuanggong set zhuangtai=" + str(leaves[i].Category) + " where userid=" + str(
                 item.userid) + " and sttime >= '" + str(leaves[i].StartTime) + "' and sttime <= '" + str(
                 leaves[i].EndTime) + "' and zhuangtai=13 or userid=" + str(
@@ -228,6 +202,7 @@ def s_qingjia(st, ed):
             # print(sql)
             db.session.execute(sql)
             db.session.commit()
+
     dataviews = db.session.query(db.func.count(kuanggong.schName).label("cishu"), kuanggong.schName, kuanggong.userid,
                                  kuanggong.riqi, kuanggong.zhuangtai).filter(
         db.and_(kuanggong.riqi >= st, kuanggong.riqi <= ed, kuanggong.zhuangtai == 13)).group_by(kuanggong.schName,

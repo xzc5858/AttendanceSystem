@@ -1,0 +1,109 @@
+{% extends "t-instruct.html" %}
+{% block content %}
+    <div class="tpl-content-page-title">
+        请假审批
+    </div>
+    <ol class="am-breadcrumb">
+        <li><a href="#" class="am-icon-home">首页</a></li>
+        <li class="am-active">请假审批</li>
+    </ol>
+    <div class="tpl-portlet-components">
+        <div class="portlet-title">
+            <div class="caption font-green bold">
+                <span class="am-icon-code"></span> 表单
+            </div>
+            <div class="tpl-portlet-input tpl-fz-ml">
+                <div class="portlet-input input-small input-inline">
+                    <div class="input-icon right">
+                        <i class="am-icon-search"></i>
+                        <input type="text" class="form-control form-control-solid" placeholder="搜索..."></div>
+                </div>
+            </div>
+        </div>
+        <div class="tpl-block ">
+            <div class="am-g tpl-amazeui-form">
+                <div class="am-u-sm-12 am-u-md-9">
+                    <form action="" class="am-form am-form-horizontal" method="post">
+                        <div class="am-form-group">
+                            <label for="user-name" class="am-u-sm-3 am-form-label">请假人姓名</label>
+                            <div class="am-u-sm-9">
+                                {{ dataview.LeaveUserId|getuser }}
+                                <small></small>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-email" class="am-u-sm-3 am-form-label">起始时间</label>
+                            <div class="am-u-sm-9">
+                                {{ dataview.StartTime.strftime('%Y-%m-%d %H:%M') }}
+                                <small></small>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-phone" class="am-u-sm-3 am-form-label">结束时间</label>
+                            <div class="am-u-sm-9">
+                                {{ dataview.EndTime.strftime('%Y-%m-%d %H:%M') }}
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-QQ" class="am-u-sm-3 am-form-label">替班人员</label>
+                            <div class="am-u-sm-9">
+                                {{ dataview.SubUserID|getuser }}
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-weibo" class="am-u-sm-3 am-form-label">其他人</label>
+                            <div class="am-u-sm-9">
+                                {{ dataview.otherUser}}
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-QQ" class="am-u-sm-3 am-form-label">请假类别</label>
+                            <div class="am-u-sm-9">
+                                {{ dataview.Category| getcat }}
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="user-QQ" class="am-u-sm-3 am-form-label">备注</label>
+                            <div class="am-u-sm-9">
+                                {{ dataview.Wtext }}
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="am-form-group">
+                            <label for="cal_style" class="am-u-sm-3 am-form-label">是否批准</label>
+                            <div class="am-u-sm-9">
+                                <select name="agree" data-am-selected="{searchBox: 1}">
+                                    <option Value="1">同意</option>
+                                    <option value="0">反对</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="cal_style" class="am-u-sm-3 am-form-label">备注</label>
+                            <div class="am-u-sm-9">
+                                <textarea name="bz" class="" rows="5" id="user-intro" placeholder="备注内容"></textarea>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <label for="cal_style" class="am-u-sm-3 am-form-label">是否公出</label>
+                            <div class="am-u-sm-9">
+                                <div class="tpl-switch">
+                                    <input name="gongcai" type="checkbox" value="1" class="ios-switch bigswitch tpl-switch-btn" {% if dataview.ifTolerance==1 %}checked{% endif %}/>
+                                    <div class="tpl-switch-btn-view">
+                                        <div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="am-form-group">
+                            <div class="am-u-sm-9 am-u-sm-push-3">
+                                <button type="submit" class="am-btn am-btn-primary">提交请假申请</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

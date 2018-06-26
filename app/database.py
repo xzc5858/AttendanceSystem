@@ -114,6 +114,7 @@ class WrittenforLeaveSign(db.Model):
     LeaveID = db.Column(db.Integer)
     UserID = db.Column(db.Integer)
     Agree = db.Column(db.Boolean)
+    riqi=db.Column(db.DateTime)
     Remarks = db.Column(db.String(5000))
 
     def __init__(self, LeaveID, UserID, Agree, Remarks):
@@ -121,6 +122,7 @@ class WrittenforLeaveSign(db.Model):
         self.UserID = UserID
         self.Agree = Agree
         self.Remarks = Remarks
+        self.riqi=datetime.now()
 
 
 # 部门表
@@ -492,6 +494,23 @@ class tequan(db.Model):
         self.EndTime = EndTime
         self.Category = Category
         self.WriteUserID = WriteUserID
+
+
+class log(db.Model):
+    __tablename__="d_log"
+
+    id=db.Column(db.Integer,primary_key=True)
+    user=db.Column(db.Integer)
+    data=db.Column(db.String)
+    riqi=db.Column(db.DateTime)
+    event=db.Column(db.String)
+    def __init__(self,userid,data,rq,event):
+        self.user=userid
+        self.date=data
+        self.riqi=rq
+        self.event=event
+
+
 
 
 
