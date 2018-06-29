@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for, \
     request, flash, g, jsonify, abort, json
 from app.database import db, User, writtenForleave, association, Cat, WrittenforLeaveSign, Audited, Role, Menu, Sumlist, \
-    machinesstate, chidao, atttransaction, qingjia, tequan,log
+    machinesstate, chidao, atttransaction, qingjia, tequan, log
 from flask_login import login_required, login_user, logout_user, current_user
 from app import app
 from datetime import datetime, timedelta
@@ -62,6 +62,8 @@ def Application_add():
         # print(sttt)
         if (SubUser == LeaveUserId):
             flash("错误：替班人员不能为请假人")
+        elif (chongfutijiao(LeaveUserId, sttt, endt)):
+            flash("错误：不能重复请相同时间段的假")
         elif InspectTime(sttt, endt):
             db.session.add(
                 writtenForleave(current_user.DepID, LeaveUserId, LeaveUser.username, LeaveUser.truename,
@@ -91,36 +93,36 @@ def Application_edit(id):
         items = request.form.getlist('other')
         print(items)
         others = ','.join(items)
-        # print(others)
-        dataview.LeaveUserId = request.form['leaveuser']
-        LeaveUser = User.query.get(int(dataview.LeaveUserId))
-        dataview.UserName = LeaveUser.username
-        dataview.LoginName = LeaveUser.truename
-        dataview.EnrollNumber = LeaveUser.EnrollNumber
-        dataview.SubUserID = request.form['SubUser']
-        dataview.otherUser = others
-        dataview.Category = request.form['Category']
-        dataview.Send = '0'
-        dataview.Wtext = request.form['Wtext']
-
         StartTime = request.form['StartTime']
         EndTime = request.form['EndTime']
 
-        # print(request.form['StartTime'])
-        # print(request.form['EndTime'])
-        # sttt = StartTime
-        # endt = EndTime
-        # print(type(sttt))
         sttt = datetime.strptime(StartTime, '%Y-%m-%d %H:%M')
         endt = datetime.strptime(EndTime, '%Y-%m-%d %H:%M')
 
-        # print(type(sttt))
-        if InspectTime(sttt, endt):
+        if (request.form['SubUser'] == request.form['leaveuser']):
+            flash("错误：替班人员不能为请假人")
+
+        elif (xg_chongfutijiao(dataview.LeaveID, request.form['leaveuser'], sttt, endt)):
+            flash("错误：不能重复请相同时间段的假")
+
+        elif InspectTime(sttt, endt):
+            dataview.LeaveUserId = request.form['leaveuser']
+            LeaveUser = User.query.get(int(dataview.LeaveUserId))
+            dataview.UserName = LeaveUser.username
+            dataview.LoginName = LeaveUser.truename
+            dataview.EnrollNumber = LeaveUser.EnrollNumber
+            dataview.SubUserID = request.form['SubUser']
+            dataview.otherUser = others
+            dataview.Category = request.form['Category']
+            dataview.Send = '0'
+            dataview.Wtext = request.form['Wtext']
+
+
             dataview.StartTime = sttt
             dataview.EndTime = endt
             db.session.add(dataview)
             db.session.commit()
-        return redirect(url_for('.Application'))
+            return redirect(url_for('.Application'))
 
     return render_template("t-application-edit.html", dataview=dataview,
                            users=User.query.filter_by(DepID=current_user.DepID).all(),
@@ -531,7 +533,6 @@ def search():
         if (custname != '' and custname != None):
             sql = sql + " and d_user.LoginName='" + custname + "' or " + sql + " and  d_user.UserName='" + custname + "' or " + sql + " and d_user.EnrollNumber='" + custname + "'"
 
-
         sumlist = db.session.query(Sumlist.UserID, User.truename, User.EnrollNumber, association.DepName,
                                    (db.func.count(db.case([(Sumlist.LeaveID == 1, Sumlist.UserID)])) / 2.00).label(
                                        "事假"),
@@ -769,6 +770,24 @@ def md5(str):
     return m.hexdigest()
 
 
+def chongfutijiao(userid, st, ed):
+    dataview = writtenForleave.query.filter(writtenForleave.LeaveUserId == userid, writtenForleave.StartTime <= st,
+                                            writtenForleave.EndTime >= ed).all()
+    if len(dataview) > 0:
+        return True
+    else:
+        return False
+
+
+def xg_chongfutijiao(leaveid, userid, st, ed):
+    dataview = writtenForleave.query.filter(writtenForleave.LeaveID != leaveid, writtenForleave.LeaveUserId == userid,
+                                            writtenForleave.StartTime <= st, writtenForleave.EndTime >= ed).all()
+    if len(dataview) > 0:
+        return True
+    else:
+        return False
+
+
 @mod.route('/getusers', methods=['GET', 'POST'])
 @login_required
 def ajaxgetusers():
@@ -779,10 +798,10 @@ def ajaxgetusers():
         return dt
 
 
-def insert_log(data,event):
-    userid=current_user.userid
-    rq=datetime.now()
-    log(userid,data,rq,event)
+def insert_log(data, event):
+    userid = current_user.userid
+    rq = datetime.now()
+    log(userid, data, rq, event)
 
 
 # 设置全局变量------------------------------------------------------
