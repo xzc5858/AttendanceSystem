@@ -1,8 +1,8 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# DATABASE_URI ="mysql+pymysql://root:123456@127.0.0.1:3306/attendance?charset=utf8"
-DATABASE_URI ="mssql+pyodbc://root:123456@localhost:1433/att?driver=SQL+Server+Native+Client+11.0"
+DATABASE_URI ="mysql+pymysql://root:123456@127.0.0.1:3306/attendance?charset=utf8"
+# DATABASE_URI ="mssql+pyodbc://root:123456@localhost:1433/att?driver=SQL+Server+Native+Client+11.0"
 # Flask-Security config
 # SECURITY_URL_PREFIX = "/admin"
 # SECURITY_PASSWORD_HASH = "pbkdf2_sha512"
