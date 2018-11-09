@@ -1,5 +1,6 @@
 from app import app  # 导入APP文件夹
 import threading
+<<<<<<< HEAD
 import os,signal
 import subprocess
 import datetime
@@ -11,6 +12,14 @@ WEBPORT = 4000
 AutoStData = False
 AutoLoadData = False
 PS = None
+=======
+import calendar
+import time
+import datetime
+HOST="127.0.0.1"
+PORT=6000
+WEBPORT=4000
+>>>>>>> 59ea19bb39b5f508c1f37a233b9e0e6e78e1fcaf
 
 
 def statisticsData():
@@ -58,6 +67,15 @@ def statisticsData():
     timer.start()
 
 
+<<<<<<< HEAD
+=======
+def statisticsData():
+    firstDayWeekDay, monthRange=calendar.monthrange(2018, 10)
+    lastDay = datetime.date(year=datetime.date.today().year, month=datetime.date.today().month, day=monthRange)
+    print(lastDay)
+
+
+>>>>>>> 59ea19bb39b5f508c1f37a233b9e0e6e78e1fcaf
 
 def http():
     print('2')
@@ -65,6 +83,9 @@ def http():
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     print('1')
+=======
+>>>>>>> 59ea19bb39b5f508c1f37a233b9e0e6e78e1fcaf
     threading.Thread(target=statisticsData).start()
     http()
