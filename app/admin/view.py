@@ -8,7 +8,7 @@ from app.views.forms import changePassword
 from datetime import datetime
 from flask import jsonify
 # from app.leave import leave
-
+import threading
 
 from . import admin
 
@@ -617,3 +617,14 @@ def delshift(id):
     db.session.commit()
     flash("删除成功！")
     return redirect(url_for('.get_shift'))
+
+
+# 自动上传
+@admin.route('/auto', methods=['GET', 'POST'])
+@login_required
+def autodata():
+    threading.Thread(target=statisticsData).start()
+import subprocess
+def statisticsData():
+    print('3')
+    subprocess.call('E:\\CodeProject\\养老保险金系统\\PensionInsurance\\WinAtt\\bin\\Debug\\WinAtt.exe')
